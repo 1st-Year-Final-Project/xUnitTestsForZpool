@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Xunit;
 using ZPool.Models;
 using ZPool.Pages.Rides;
-using ZPool.Services.EFService;
-using ZPool.Services.EFService.RideService;
-using ZPool.Services.Interface;
+using ZPool.Services.EFServices.RideService;
+using ZPool.Services.Interfaces;
+
 
 namespace xUnitTestProject
 {
@@ -18,7 +18,7 @@ namespace xUnitTestProject
 
         public RideServiceTest()
         {
-            _rideService = new RideService(_context);
+            _rideService = new EFRideService(_context);
             
         }
 

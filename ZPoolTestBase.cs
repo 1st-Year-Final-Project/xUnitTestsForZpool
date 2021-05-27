@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using UserManagementTestApp.Models;
 using ZPool.Models;
 using ZPool.Models;
 
@@ -14,11 +14,12 @@ namespace xUnitTestProject
 
         public ZPoolTestBase()
         {
-            var options = new DbContextOptionsBuilder<AppDbContext>().UseSqlite($"Filename={Guid.NewGuid()}.db")
-                .Options;
+            string connection = $"Filename={Guid.NewGuid()}.db";
+            var options = new DbContextOptionsBuilder<AppDbContext>()
+                    .UseSqlite(connection).Options;
 
             _context = new AppDbContext(options);
-
+            _context.Database.EnsureDeleted();
             Seed();
         }
 
@@ -36,7 +37,7 @@ namespace xUnitTestProject
 
                 _context.Users.Add(new AppUser()
                 {
-                    Id = 1,
+                    
                     Email = "user@email.com",
                     FirstName = "Tester",
                     LastName = "Master",
@@ -44,7 +45,7 @@ namespace xUnitTestProject
                 });
                 _context.Users.Add(new AppUser()
                 {
-                    Id = 2,
+                    
                     Email = "user2@email.com",
                     FirstName = "Another",
                     LastName = "Tester",
@@ -52,7 +53,7 @@ namespace xUnitTestProject
                 });
                 _context.Users.Add(new AppUser()
                 {
-                    Id = 3,
+                    
                     Email = "user3@email.com",
                     FirstName = "AnotherOne",
                     LastName = "Tester",

@@ -6,9 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using ZPool.Models;
 using Xunit;
 using ZPool.Models;
-using ZPool.Services.EFService;
-using ZPool.Services.EFService.RideService;
-using ZPool.Services.Interface;
+using ZPool.Services.EFServices;
+using ZPool.Services.EFServices.RideService;
+using ZPool.Services.Interfaces;
+
 
 namespace xUnitTestProject
 {
@@ -20,7 +21,7 @@ namespace xUnitTestProject
         public CarServiceTest()
         {
             _carService = new EFCarService(base._context);
-            _rideService = new RideService(base._context);
+            _rideService = new EFRideService(base._context);
         }
         
         [Fact]

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using VisioForge.Controls.UI.Annotations;
 using Xunit;
 using ZPool.Models;
-using ZPool.Services.EFService;
-using ZPool.Services.Interface;
+using ZPool.Services.EFServices;
+using ZPool.Services.Interfaces;
+
 
 namespace xUnitTestProject
 {
@@ -16,7 +18,7 @@ namespace xUnitTestProject
 
         public BookingServiceTest()
         {
-            _bookingService = new EFBookingService(base._context, new MessageService(_context));
+            _bookingService = new EFBookingService(base._context, new EFMessageService(_context));
         }
 
         [Fact]
@@ -135,5 +137,44 @@ namespace xUnitTestProject
             Assert.False(check);
         }
 
+        [Fact]
+        public void GetBookingsByStatus_Test()
+        {
+            AppUser user = _context.Users.FirstOrDefault(u => u.Id == 2);
+
+            var bookings = _bookingService.GetBookingsByStatus("Accepted", user);
+            var bookings2 = _bookingService.GetBookingsByStatus("Pending", user);
+            var bookings3 = _bookingService.GetBookingsByStatus("Rejected", user);
+            var bookings4 = _bookingService.GetBookingsByStatus("Cancelled", user);
+
+            Assert.Empty(bookings);
+            Assert.Single(bookings2);
+            Assert.Single(bookings3);
+            Assert.Empty(bookings4);
+        }
+
+        [Fact]
+        public void UpdateBookingStatus_AcceptedToAcceptedThrowsEx_Test()
+        {
+            Assert.ThrowsAny<Exception>(()=> _bookingService.UpdateBookingStatus(1, "Accepted"));
+        }
+
+        [Fact]
+        public void UpdateBookingStatus_RejectedToAccepted_ThrowsEx_Test()
+        {
+            Assert.ThrowsAny<Exception>(() => _bookingService.UpdateBookingStatus(3, "Accepted"));
+        }
+
+        [Fact]
+        public void UpdateBookingStatus_RejectedToPending_ThrowsEx_Test()
+        {
+            Assert.ThrowsAny<Exception>(() => _bookingService.UpdateBookingStatus(3, "Pending"));
+        }
+
+        [Fact]
+        public void UpdateBookingStatus_AcceptedToRejected_ThrowsEx_Test()
+        {
+            Assert.ThrowsAny<Exception>(() => _bookingService.UpdateBookingStatus(1, "Rejected"));
+        }
     }
 }
